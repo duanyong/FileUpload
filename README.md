@@ -15,18 +15,18 @@ Please note that this project is released with a [Contributor Code of Conduct](C
 Requires jQuery 1.7.2 or later. Compatible with jQuery 2.x.x and 3.x.x.
 
 ## Download
-* **Development:** [src/jquery.form.js
-](https://github.com/jquery-form/form/blob/master/src/jquery.form.js)
-* **Production/Minified:** [dist/jquery.form.min.js
-](https://github.com/jquery-form/form/blob/master/dist/jquery.form.min.js)
+* **Development:** [src/jquery.upload.js
+](https://github.com/duanyong/FileUpload/blob/master/src/jquery.upload.js)
+* **Production/Minified:** [dist/jquery.upload.min.js
+](https://raw.githubusercontent.com/duanyong/FileUpload/master/dist/jquery.upload.min.js)
 
 ### CDN
 ```html
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
+<script src="https://github.com/duanyong/FileUpload/blob/master/src/jquery.upload.js"></script>
 ```
 or
 ```html
-<script src="https://cdn.jsdelivr.net/jquery.form/4.2.1/jquery.form.min.js" integrity="sha384-tIwI8+qJdZBtYYCKwRkjxBGQVZS3gGozr3CtI+5JF/oL1JmPEHzCEnIKbDbLTCer" crossorigin="anonymous"></script>
+<script src="https://raw.githubusercontent.com/duanyong/FileUpload/master/dist/jquery.upload.min.js"></script>
 ```
 
 ---
