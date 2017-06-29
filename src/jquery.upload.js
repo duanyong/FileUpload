@@ -45,12 +45,22 @@
      functions are mutually exclusive. Use ajaxSubmit if you want
      to bind your own submit handler to the form. For example,
 
-     $(document).ready(function() {
-     $('input[type="file"]').ajaxFileUpload('/upload?X-Progress-ID=' + uuid, function(event) {
+     1,
+    $('#upload').ajaxFileUpload({
+        'url'           : '/upload?X-Progress-ID=' + s_uuid(),      //the upload url on server
+        'dataType'      : 'json',                                   //types: json(default)，text，xml，html, scritp,jsonp
+        'data'          : {'name' : 'duanyong', 'zip' : '200000'}
+        'debug'         : true,
+        'success'       : function(ret) {
+            console.log(ret);
+        }
+    });
 
-     });
-     });
 
+    2,
+    $('#upload').ajaxFileUpload('/upload?X-Progress-ID=' + s_uuid(), function(ret) {
+        console.log(ret);
+    });
 
      When using ajaxForm, the ajaxSubmit function will be invoked for you
      at the appropriate time.
@@ -147,7 +157,7 @@
 
     function uploadHttpData(r, type) {
         var data = !type;
-        data = type == 'xml' || data ? r.responseXML : r.responseText;
+        data = type === 'xml' || data ? r.responseXML : r.responseText;
 
         // If the type is "script", eval it in global context
         if (type == 'script') {
@@ -341,15 +351,19 @@
             setting = $.extend(setting, url);
         }
 
-        var id;
-        if (!( id = this.attr('id') )) {
-            this.attr('id', id = new Date().getTime());
-        }
+        this.each(function(idx, input) {
+            var id;
+            if (!( id = $(input).attr('id') )) {
+                $(input).attr('id', id = new Date().getTime());
+            }
 
-        debug = !!setting.debugg;
+            debug = !!setting.debugg;
 
-        configs['' + id] = setting;
+            configs['' + id] = $.extend({
+                dataType: 'json'
+            }, setting);
 
-        this.bind('change', upload);
+            $(input).bind('change', upload);
+        });
     };
 }));
