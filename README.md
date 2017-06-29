@@ -55,9 +55,10 @@ call. It can be accessed like this:
 Prepares a form to be submitted via AJAX by adding all of the necessary event listeners. It does **not** submit the form. Use `ajaxForm` in your document's `ready` function to prepare existing forms for AJAX submission, or with the `delegation` option to handle forms not yet added to the DOM.  
 Use ajaxForm when you want the plugin to manage all the event binding for you.
 
-````javascript
+
 // upload is element in document. The element such as : <input id="upload" type="file" name="file" />
 //Ex 1.
+````javascript
 $('#upload').ajaxFileUpload({
     'url'           : '/upload?X-Progress-ID=' + s_uuid(),      //the upload url on server
     'dataType'      : 'json',                                   //types: json(default)，text，xml，html, scritp,jsonp
@@ -71,10 +72,9 @@ $('#upload').ajaxFileUpload({
 
 //Ex 2.
 ````javascript
-// bind submit handler to form
-    $('#upload').ajaxFileUpload('/upload?X-Progress-ID=' + s_uuid(), function(ret) {
-        console.log(ret);
-    });
+$('#upload').ajaxFileUpload('/upload?X-Progress-ID=' + s_uuid(), function(ret) {
+    console.log(ret);
+});
 ````
 
 
