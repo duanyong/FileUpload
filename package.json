@@ -1,0 +1,40 @@
+{
+  "name": "jquery-upload",
+  "version": "4.2.1",
+  "description": "The jQuery File Upload Plugin allows you to upload anythin from browser to server with iframe.",
+  "keywords": [
+    "jquery",
+    "ajax",
+    "jquery-plugin",
+    "json",
+    "html-form",
+    "form",
+    "jquery-upload"
+  ],
+  "homepage": "https://github.com/duanyong/FileUpload",
+  "bugs": "https://github.com/duanyong/FileUpload/issues",
+  "license": "(MIT OR LGPL-3.0)",
+  "contributors": [
+    "Duan Yong"
+  ],
+  "main": "src/jquery.fileupload.js",
+  "browser": "dist/jquery.fileupload.min.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:duanyong/FileUpload.git"
+  },
+  "dependencies": {
+    "jquery": ">=1.7.2"
+  },
+  "devDependencies": {
+    "chai": "^4.0.1",
+    "grunt": "^1.0.1",
+    "grunt-cli": "^1.2.0",
+    "grunt-contrib-uglify": "^3.0.1",
+    "grunt-eslint": "*",
+    "grunt-githooks": "^0.6.0",
+    "grunt-mocha": "^1.0.4",
+    "jquery": "^3.0.0",
+    "mocha": "^3.4.2"
+  }
+}
