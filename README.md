@@ -1,4 +1,4 @@
-# jQuery Form [![Build Status](https://travis-ci.org/jquery-form/form.svg?branch=master)](https://travis-ci.org/jquery-form/form)
+# jQuery FileUpload [![Build Status](https://travis-ci.org/jquery-form/form.svg?branch=master)](https://travis-ci.org/jquery-form/form)
 
 ## Overview
 The jQuery FileUpload Plugin allows you to easily and unobtrusively upload file to server to use iframe. The main method is ajaxFileUpload(only one), gather information from the form element to determine how to manage the submit process. Both of these methods support numerous options which allows you to have full control over how the data is submitted.
@@ -20,7 +20,7 @@ Requires jQuery 1.7.2 or later. Compatible with jQuery 2.x.x and 3.x.x.
 * **Production/Minified:** [dist/jquery.upload.min.js
 ](https://raw.githubusercontent.com/duanyong/FileUpload/master/dist/jquery.upload.min.js)
 
-### CDN
+### DOWNLOAD
 ```html
 <script src="https://github.com/duanyong/FileUpload/blob/master/src/jquery.upload.js"></script>
 ```
