@@ -21,11 +21,11 @@
                 // that require this pattern but the window provided is a noop if it's defined (how jquery works)
                 if (typeof window !== 'undefined') {
                     jQuery = require('jquery');
-                }
-                else {
+                } else {
                     jQuery = require('jquery')(root);
                 }
             }
+
             factory(jQuery);
             return jQuery;
         };
@@ -45,8 +45,9 @@
      functions are mutually exclusive. Use ajaxSubmit if you want
      to bind your own submit handler to the form. For example,
 
-     1,
-    $('#upload').ajaxFileUpload({
+    1,
+     $('#upload').ajaxFileUpload({
+        'debug'		: true,
         'url'           : '/upload?X-Progress-ID=' + s_uuid(),      //the upload url on server
         'dataType'      : 'json',                                   //types: json(default)，text，xml，html, scritp,jsonp
         'data'          : {'name' : 'duanyong', 'zip' : '200000'}
@@ -54,13 +55,13 @@
         'success'       : function(ret) {
             console.log(ret);
         }
-    });
+     });
 
 
     2,
-    $('#upload').ajaxFileUpload('/upload?X-Progress-ID=' + s_uuid(), function(ret) {
+     $('#upload').ajaxFileUpload('/upload?X-Progress-ID=' + s_uuid(), function(ret) {
         console.log(ret);
-    });
+     });
 
      When using ajaxForm, the ajaxSubmit function will be invoked for you
      at the appropriate time.
@@ -114,7 +115,14 @@
             }
         }
 
-        iframeHtml += ' />';
+        iframeHtml += '>';
+
+        if (window.ActiveXObject) {
+		iframeHtml += '<html><head><script>document.domain="' + document.domain + '";</script></head></html>';
+        }
+
+        iframeHtml += '</iframe>';
+
         $(iframeHtml).appendTo(document.body);
 
         log('created iframe done.');
@@ -123,11 +131,11 @@
     }
 
 
-    function createForm(id, fileElementId, data) {
+    function createForm(id, fileElementId, data, iframe) {
         //create form
         var formId = 'jUploadForm' + id,
             fileId = 'jUploadFile' + id,
-            form = $('<form  action="" method="POST" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');
+            form = $('<form  action="" method="POST" target="' + $(iframe).id() + '" name="' + formId + '" id="' + formId + '" enctype="multipart/form-data"></form>');
 
         if (data) {
             for (var name in data) {
@@ -183,8 +191,8 @@
         var token   = $(this).attr('id'),
             setting = configs['' + token];
 
-        var form   = createForm(token, token, (typeof(setting.data) == 'undefined' ? false : setting.data)),
-            iframe = createIframe(token, setting.secureuri);
+        var iframe = createIframe(token, setting.secureuri),
+	    form   = createForm(token, token, (typeof(setting.data) == 'undefined' ? false : setting.data), iframe);
 
         if (!form || !iframe) {
             return error(setting, null, null, new Error('no form or iframe'));
@@ -192,16 +200,11 @@
 
 
         // Watch for a new set of requests
-        if (setting.global && ! $.active ++) {
-            $.event.trigger('ajaxStart');
-        }
+        $.event.trigger('ajaxStart', [setting]);
 
         var xml = {}, requestDone = false;
 
-        // Create the request object
-        if (setting.global) {
-            $.event.trigger('ajaxSend', [xml, setting]);
-        }
+
 
         // Wait for a response to come back
         var uploadCallback = function(isTimeout) {
@@ -211,12 +214,11 @@
                         xml.responseText = iframe.contentWindow.document.body.textContent;
                     }
 
-
                     if (iframe.contentWindow.document.body.outerContent) {
                         xml.responseText = iframe.contentWindow.document.body.outerContent;
                     }
 
-                    xml.responseXML    = iframe.contentWindow.document.XMLDocument
+                    xml.responseXML     = iframe.contentWindow.document.XMLDocument
                         ? iframe.contentWindow.document.XMLDocument
                         : iframe.contentWindow.document;
 
@@ -234,6 +236,10 @@
             }
 
 
+            if (setting.begin) {
+                setting.begin.call($('#' + token).get(0), setting);
+            }
+
             if (xml || isTimeout === 'timeout') {
                 var status;
 
@@ -245,13 +251,13 @@
                         var data = uploadHttpData(xml, setting.dataType);
                         // If a local callback was specified, fire it and pass it the data
                         if (setting.success) {
-                            setting.success(data, status);
+                            setting.success.call($('#' + token).get(0), data, setting);
                         }
 
-                        // Fire the global callback
-                        if (setting.global) {
-                            $.event.trigger('ajaxSuccess', [xml, setting]);
-                        }
+                        //// Fire the global callback
+                        //if (setting.global) {
+                        //    $.event.trigger('ajaxSuccess', [setting, xml]);
+                        //}
 
                     } else {
                         error(setting, xml, status);
@@ -260,19 +266,19 @@
                     error(setting, xml, status = 'error', e);
                 }
 
-                // The request was completed
-                if (setting.global) {
-                    $.event.trigger('ajaxComplete', [xml, setting]);
-                }
-
-                // Handle the global AJAX counter
-                if (setting.global && ! --$.active) {
-                    $.event.trigger('ajaxStop');
-                }
+                //// The request was completed
+                //if (setting.global) {
+                //    $.event.trigger('ajaxComplete', [setting, xml]);
+                //}
+                //
+                //// Handle the global AJAX counter
+                //if (setting.global && ! --$.active) {
+                //    $.event.trigger('ajaxStop');
+                //}
 
                 // Process result
                 if (setting.complete) {
-                    setting.complete(xml, status);
+                    setting.complete.call($('#' + token).get(0), xml, status);
                 }
 
                 $(iframe).unbind();
@@ -320,6 +326,9 @@
             error(setting, xml, null, e);
         }
 
+        // Create the request object
+        $.event.trigger('ajaxSend', [setting, xml]);
+
         $(iframe).load(uploadCallback);
 
         return {abort: function () {}};
@@ -332,7 +341,13 @@
         var type = typeof options;
 
         if (type !== 'object') {
-            setting = {};
+            setting = {
+                'begin'         : function() {},
+                'success'       : function() {},
+                'complete'      : function() {}
+                //'ajaxStart'     : function() {},
+                //'ajaxStop'      : function() {}
+            };
         }
 
         if (typeof options === 'function') {
@@ -357,13 +372,17 @@
                 $(input).attr('id', id = new Date().getTime());
             }
 
-            debug = !!setting.debugg;
+            debug = !!setting.debug;
 
             configs['' + id] = $.extend({
                 dataType: 'json'
             }, setting);
 
             $(input).bind('change', upload);
+            //$(input).bind('ajaxSuccess',    setting.ajaxSuccess);
+            //$(input).bind('ajaxComplete',   setting.ajaxComplete);
+            //$(input).bind('ajaxStart',      setting.ajaxStart);
+            //$(input).bind('ajaxStop',       setting.ajaxStop);
         });
     };
 }));
