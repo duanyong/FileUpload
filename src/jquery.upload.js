@@ -117,9 +117,9 @@
 
         iframeHtml += '>';
 
-        if (window.ActiveXObject) {
-		iframeHtml += '<html><head><script>document.domain="' + document.domain + '";</script></head></html>';
-        }
+//        if (window.ActiveXObject) {
+//		iframeHtml += '<html><head><script>document.domain="' + document.domain + '";</script></head></html>';
+//        }
 
         iframeHtml += '</iframe>';
 
